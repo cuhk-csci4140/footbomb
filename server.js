@@ -1,7 +1,7 @@
 #!/bin/env node
 
-var SERVER_URL = process.env.OPENSHIFT_NODEJS_IP || "192.168.214.101",//192.168.215.255",
-    PORT = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+var SERVER_URL = "127.0.0.1",
+    PORT = 8080;
 
 var app = require("http").createServer(handler),
     path = require("path"),
@@ -28,49 +28,44 @@ Room.prototype.Tool = require('./Tool.js');
 var GameControl = (function () {
     function assignRoom(name, picId, socket) {
         var len = emptyRoom.length,
-			roomId;
+            roomId;
 
-		if(len){
-            roomId = emptyRoom[len-1];
-		} else {
-			roomId = rooms.length;
-			rooms.push(new Room(roomId));
-			emptyRoom.push(roomId);
-		}
+        if (len) {
+            roomId = emptyRoom[len - 1];
+        } else {
+            roomId = rooms.length;
+            rooms.push(new Room(roomId));
+            emptyRoom.push(roomId);
+        }
 
         var room = rooms[roomId],
             playerId = room.player.length; //0 or 1
 
-        socket.join(""+roomId);
-console.log('player '+name+' joined room:'+roomId+'. which has '+ io.sockets.clients(''+roomId).length +' sockets now');
-
+        socket.join("" + roomId);
         socket.roomId = roomId;
         socket.playerId = playerId;
         room.createPlayer(name, socket.playerId, picId);
-		
-		if(io.sockets.clients(''+roomId).length >= 2){//the room is full, make a new room and start the game
-        	emptyRoom.pop();
+
+        if (io.sockets.clients('' + roomId).length >= 2) { //the room is full, make a new room and start the game
+            emptyRoom.pop();
             socket.emit('game init', 1, room.player);
-        	socket.broadcast.to(''+roomId).emit('game init', 0, room.player);
+            socket.broadcast.to('' + roomId).emit('game init', 0, room.player);
             gameStart(roomId);
-		}
+        }
     }
 
     function gameStart(roomId) {
         var room = rooms[roomId];
         room.gameIsOver = false;
 
-		io.sockets.in('' + roomId).emit('sound', 'background');
-		
+        io.sockets.in('' + roomId).emit('sound', 'background');
+
         genBombs();
         genTools();
         update();
-		
+
 
         function genBombs() {
-            // --- first check game time s.t. gen bomb rate gets faster and faster --- //
-            //room.genBombCount = room.genBombCount + 1;
-            //room.genBombCount = 0; // reset
             if (room.newBombInterval > 5000) {
                 room.newBombInterval = room.newBombInterval * 0.9;
             }
@@ -78,19 +73,18 @@ console.log('player '+name+' joined room:'+roomId+'. which has '+ io.sockets.cli
             room.createBombs();
             io.sockets.in('' + roomId).emit('draw', room.getData());
             if (!room.gameIsOver) {
- 
-				room.bombLoopId = setTimeout(genBombs, genInterval(room.newBombInterval));
-			}
+
+                room.bombLoopId = setTimeout(genBombs, genInterval(room.newBombInterval));
+            }
         };
 
         function genTools() {
             room.createTools();
             io.sockets.in('' + roomId).emit('draw', room.getData());
-//		io.sockets.in('' + roomId).emit('sound', "newtool");
             if (!room.gameIsOver) {
- 
-				room.toolLoopId = setTimeout(genTools, genInterval(room.newToolInterval));
-			}
+
+                room.toolLoopId = setTimeout(genTools, genInterval(room.newToolInterval));
+            }
         }
 
         function update() {
@@ -101,31 +95,31 @@ console.log('player '+name+' joined room:'+roomId+'. which has '+ io.sockets.cli
             //if any player is dead
             if (!room.gameIsOver) {
                 room.updateLoopId = setTimeout(update, 50);
-            } else { 
-            	var losers = room.losers;
+            } else {
+                var losers = room.losers;
                 //if(gameIsOver) return;
                 if (losers.length == room.player.length) { //tie game
-			io.sockets.in('' + roomId).emit('draw', room.getData());
+                    io.sockets.in('' + roomId).emit('draw', room.getData());
                     io.sockets.in('' + roomId).emit('game over', 'tie');
-					io.sockets.in('' + roomId).emit('sound', 'lose');
+                    io.sockets.in('' + roomId).emit('sound', 'lose');
                     return;
                 }
 
-				//get all sockets in a room
-                var sockets = io.sockets.clients(''+roomId);
-		io.sockets.in('' + roomId).emit('draw', room.getData());
+                //get all sockets in a room
+                var sockets = io.sockets.clients('' + roomId);
+                io.sockets.in('' + roomId).emit('draw', room.getData());
                 for (var i = sockets.length - 1; i >= 0; i--) {
                     var socket = sockets[i];
                     if (socket.playerId == losers[0].playerId) {
                         socket.emit('game over', 'You lose');
-						socket.emit('sound', 'lose');
+                        socket.emit('sound', 'lose');
                     } else {
-                        socket.emit('game over', 'You win');	
-						socket.emit('sound', 'win');
+                        socket.emit('game over', 'You win');
+                        socket.emit('sound', 'win');
                     }
-					socket.leave(''+roomId);
+                    socket.leave('' + roomId);
                 }
-				gameOver(roomId);
+                gameOver(roomId);
             }
         }
 
@@ -146,14 +140,12 @@ console.log('player '+name+' joined room:'+roomId+'. which has '+ io.sockets.cli
         rooms[roomId] = new Room(roomId);
         //remove the room
         emptyRoom.unshift(roomId);
-        console.log(emptyRoom);
-        console.log('Room '+roomId+' GAME OVER!!!!!!!!!!!!!!!!!!!!!!!!!!');
         rooms[roomId].gameIsOver = true;
     }
 
     return {
         assignRoom: assignRoom,
-    	gameOver: gameOver
+        gameOver: gameOver
     };
 })();
 
@@ -168,16 +160,16 @@ io.set('log level', 1);
 
 io.sockets.on('connection', function (socket) {
     socket.on('new player', function (userName, userPic) {
-		if(rooms.roomId){
-			socket.leave(''+socket.roomId);
-		}
+        if (rooms.roomId) {
+            socket.leave('' + socket.roomId);
+        }
         GameControl.assignRoom(userName, userPic, socket);
     });
     socket.on('key down', function (key) {
         var roomId = socket.roomId,
             room = rooms[roomId];
 
-		if(io.sockets.clients(''+roomId).indexOf(socket) ==-1){
+        if (io.sockets.clients('' + roomId).indexOf(socket) == -1) {
             return;
         }
         var playerId = socket.playerId;
@@ -190,33 +182,33 @@ io.sockets.on('connection', function (socket) {
             room = rooms[roomId],
             playerId = socket.playerId;
 
-		if(io.sockets.clients(''+roomId).indexOf(socket) ==-1){
+        if (io.sockets.clients('' + roomId).indexOf(socket) == -1) {
             return;
-        } 
+        }
         room.updatePlayerActionUp(key, playerId);
         io.sockets.in('' + roomId).emit('draw', room.getData());
     });
     socket.on('disconnect', function () {
-		var roomId = socket.roomId,
-			room = rooms[roomId];
-		if(io.sockets.clients(''+roomId).indexOf(socket) ==-1){
+        var roomId = socket.roomId,
+            room = rooms[roomId];
+        if (io.sockets.clients('' + roomId).indexOf(socket) == -1) {
             return;
-        } 
+        }
 
-			if(room.player.length<=1){ // if the room is empty, reset it
-        		GameControl.gameOver(roomId);
-				return;
-			}
-		if(room.gameIsOver === false) {
-        	socket.broadcast.to(''+roomId).emit('game over', 'Your rival runs away.')
-			socket.broadcast.to(''+roomId).emit('sound', 'win');
+        if (room.player.length <= 1) { // if the room is empty, reset it
+            GameControl.gameOver(roomId);
+            return;
+        }
+        if (room.gameIsOver === false) {
+            socket.broadcast.to('' + roomId).emit('game over', 'Your rival runs away.')
+            socket.broadcast.to('' + roomId).emit('sound', 'win');
 
-			// leave room
-			var sockets = io.sockets.clients(''+roomId);
-			for(var i=sockets.length-1; i>=0; i--){
-				sockets[i].leave(''+roomId);
-			}
-		}
+            // leave room
+            var sockets = io.sockets.clients('' + roomId);
+            for (var i = sockets.length - 1; i >= 0; i--) {
+                sockets[i].leave('' + roomId);
+            }
+        }
     });
 });
 //********************************
@@ -226,43 +218,42 @@ io.sockets.on('connection', function (socket) {
 //********************************
 // serve static files
 //********************************
-function handler (req, res) {
- 	 
-	var filename = require('url').parse(req.url).pathname; 
-	if (filename == '/') {
-		filename = "/footbomb.html";
-	};
-	var ext = path.extname(filename);
-	var localPath = __dirname;
-	var validExtensions = {
-		".html" : "text/html",	
-		".js": "application/javascript",
-		".css": "text/css",
-		".txt": "text/plain",
-		".jpg": "image/jpeg",
-		".gif": "image/gif",
-		".png": "image/png",
-		".wav": "audio/wav"
-	};
-	var isValidExt = validExtensions[ext];
-	 
-	if (isValidExt) {
-		localPath += filename;
-		fs.exists(localPath, function(exists) {
-			if(exists) {
-				//console.log("Serving file: " + localPath);
-				getFile(localPath, res, ext);
-			} else {
-				console.log("File not found: " + localPath);
-				res.writeHead(404);
-				res.end();
-			}
-		});	 
-	} else {
-		console.log("Invalid file extension detected: " + filename)
-	} 
+function handler(req, res) {
+
+    var filename = require('url').parse(req.url).pathname;
+    if (filename == '/') {
+        filename = "/footbomb.html";
+    };
+    var ext = path.extname(filename);
+    var localPath = __dirname;
+    var validExtensions = {
+        ".html": "text/html",
+        ".js": "application/javascript",
+        ".css": "text/css",
+        ".txt": "text/plain",
+        ".jpg": "image/jpeg",
+        ".gif": "image/gif",
+        ".png": "image/png",
+        ".wav": "audio/wav"
+    };
+    var isValidExt = validExtensions[ext];
+
+    if (isValidExt) {
+        localPath += filename;
+        fs.exists(localPath, function (exists) {
+            if (exists) {
+                getFile(localPath, res, ext);
+            } else {
+                console.log("File not found: " + localPath);
+                res.writeHead(404);
+                res.end();
+            }
+        });
+    } else {
+        console.log("Invalid file extension detected: " + filename)
+    }
 }
- 
+
 
 function getFile(localPath, res, mimeType) {
     fs.readFile(localPath, function (err, contents) {

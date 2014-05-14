@@ -87,8 +87,8 @@ $(function () {
             $('.welcome-screen button').attr('disabled', false);
             $('.welcome-screen .matching').addClass('hide');
 
-			// clear images on side panels
-			$('.player .tool-list div').html('');
+            // clear images on side panels
+            $('.player .tool-list div').html('');
 
             //display player name and picture
             for (var i = players.length - 1; i >= 0; i--) {
@@ -145,7 +145,6 @@ $(function () {
         function keySet(e) {
             var key = KEY_CODES[e.which];
             if (key && !KEY_STATUS[key]) { //only fire once if keep depressed
-                console.log("Key down:" + key);
                 KEY_STATUS[key] = true;
                 Game.socket.emit('key down', key);
             }
@@ -154,7 +153,6 @@ $(function () {
 
         function keyUp(e) {
             var key = KEY_CODES[e.which];
-            console.log("Key up:" + key);
             if (key) {
                 KEY_STATUS[key] = false;
                 Game.socket.emit('key up', key);
@@ -198,20 +196,20 @@ $(function () {
         var drawFunctions = {
             bomb: function (bomb) {
                 ctx.globalCompositeOperation = 'destination-over';
-//rotate
-            if (bomb.isFlying) {
-                var x = bomb.centerX,
-                    y = bomb.centerY;
-                ctx.save();
-                ctx.translate(x, y);
-                ctx.rotate(bomb.angle);
-                ctx.translate(-x, -y);
+                //rotate
+                if (bomb.isFlying) {
+                    var x = bomb.centerX,
+                        y = bomb.centerY;
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.rotate(bomb.angle);
+                    ctx.translate(-x, -y);
 
-                ctx.drawImage(Game.imageRepo.bomb[bomb.state], bomb.posX, bomb.posY);
-                ctx.restore();
-            } else {
-                ctx.drawImage(Game.imageRepo.bomb[bomb.state], bomb.posX, bomb.posY);
-            }
+                    ctx.drawImage(Game.imageRepo.bomb[bomb.state], bomb.posX, bomb.posY);
+                    ctx.restore();
+                } else {
+                    ctx.drawImage(Game.imageRepo.bomb[bomb.state], bomb.posX, bomb.posY);
+                }
                 //highlight the bomb that is nearest to the player
                 if (bomb.nearest == true) {
                     ctx.beginPath();
@@ -269,7 +267,7 @@ $(function () {
 
                 for (var i = 0; i < arr.length; i++) {
                     var type = arr[i],
-                        len = player.tools[type]? 1 : 0;
+                        len = player.tools[type] ? 1 : 0;
                     listTool(type, player.playerId, len);
                 }
             }
