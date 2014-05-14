@@ -11,7 +11,7 @@ A real-time two-player web game. Built with Node.js, socket.io and HTML5 canvas.
 
 ##### Pick-ups:
 + ![alt text](https://raw.githubusercontent.com/Y--p--Y/footbomb/master/image/skate.png): Raise your moving speed for 1 minute
-+ ![alt text](https://raw.githubusercontent.com/Y--p--Y/footbomb/master/image/ironman.png): Reduce your moving speed for 1 minute
++ ![alt text](https://raw.githubusercontent.com/Y--p--Y/footbomb/master/image/shell.png): Reduce your moving speed for 1 minute
 + ![alt text](https://raw.githubusercontent.com/Y--p--Y/footbomb/master/image/heart.png): Give you an extra life to play the game
 + ![alt text](https://raw.githubusercontent.com/Y--p--Y/footbomb/master/image/shoe.png): Enable you to kick further for 1 minute
 + ![alt text](https://raw.githubusercontent.com/Y--p--Y/footbomb/master/image/box.png): With that you can put a bomb wherever you want
