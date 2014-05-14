@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Footballbomb</title>
+	<style>
+      *{
+        margin: 0;
+        padding: 0;
+        border: 0;        
+      }
+      body, canvas{
+        margin:0;
+        padding: 0;
+        border: 0;
+      }
+
+      body{
+        background: black;
+      }
+      #canvas{
+        	background: #008000;
+		background-image:url(./image/field.png);
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate3d(-50%, -50%, 0);
+        -moz-transform: translate3d(-50%, -50%, 0);
+        transform: translate3d(-50%, -50%, 0);
+        z-index: 0;
+	}
+	.player{
+		width: 80px;
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		color: white;
+		text-align: center;
+	}
+	.player0{
+		left: 0;
+	}
+	.player1{
+		right: 0;
+	}
+      .message{
+        margin-top: 20px;
+        position: absolute;
+        top: 70px;
+        left: 50%;
+		-webkit-transform: translateX(-50%);
+		-moz-transform: translateX(-50%);
+		-ms-transform: translateX(-50%);
+		transform: translateX(-50%);
+		width: 400px;
+        z-index: 1;
+        background: white;
+        display: none;
+        padding: 10px;
+		border: solid 10px #ccc;
+        border-radius: 10px;
+        text-align: center;
+		margin: 15px;
+      }      
+      .message h1{
+		margin-bottom: 30px;
+      }
+      .message button{
+		margin-top: 20px;
+		float: right;
+		font-weight: bold;
+		color: white;
+        padding: .5rem;
+        background: rgba(70, 70, 250, 1);
+        border-radius: 10px;
+		cursor: pointer;
+      }
+		.message input[type=text]{
+			padding: .5rem;
+			border-bottom: 2px solid  rgba(70, 70, 250, 1);
+			position: relative;
+			z-index: 30;
+		}
+		.message input[type=text]:focus{
+			outline: none;
+		}
+
+.welcome-screen{
+  display: block;
+}
+
+		.player img,
+		img.swing{
+			-webkit-animation: swing .5s infinite alternate;
+  			-moz-animation: swing 1s infinite alternate;
+  			-ms-animation: swing 1s infinite alternate;
+  			animation: swing 1s infinite alternate;
+		}
+
+	img.jump{
+			-webkit-animation: jump .5s infinite alternate;
+  			-moz-animation: jump 1s infinite alternate;
+  			-ms-animation: jump 1s infinite alternate;
+  			animation: jump 1s infinite alternate;
+	}
+@-webkit-keyframes jump {
+  from { -webkit-transform:translateY(2px); }
+  to { -webkit-transform:rotateY(-2px); }
+}
+@-moz-keyframes jump {
+  from { -moz-transform:translateY(2px); }
+  to { -moz-transform:rotate(-2px); }
+}
+@-ms-keyframes jump {
+  from { -ms-transform:translateY(2px); }
+  to { -ms-transform:rotate(-2px); }
+}
+@keyframes jump {
+  from { transform:translate(2px); }
+  to { transform:rotate(-2px); }
+}
+
+@-moz-keyframes swing {
+  from { -webkit-transform:rotate(-5deg); }
+to { -webkit-transform:rotate(5deg); }
+}
+@-ms-keyframes swing {
+  from { -webkit-transform:rotate(-5deg); }
+to { -webkit-transform:rotate(5deg); }
+}
+@-webkit-keyframes swing {
+  from { -webkit-transform:rotate(-5deg); }
+to { -webkit-transform:rotate(5deg); }
+}
+
+@keyframes swing {
+  from { transform:rotate(-5deg); }
+to { transform:rotate(5deg); }
+}
+
+		img{
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			user-select: none;
+		}
+		
+		.hide{
+			display: none;
+		}
+		#audio_background{
+			position: fixed;
+			right: 0;
+			bottom: 0;
+		}
+	</style>
+
+  </head>
+  <body>
+    <canvas id="field">            
+      Your browser needs to support canvas for this to work!
+    </canvas>
+    <canvas id="canvas"></canvas>
+	<div class='player player0'>
+		<div>
+			<img id="role_0">
+			<div id="name_0"></div>
+		</div>
+		<div class='tool-list'>
+			<div id="heart_0"></div>
+			<div id="skate_0"></div>
+			<div id="shell_0"></div>
+			<div id="shoe_0"></div>
+			<div id="ironman_0"></div>
+			<div id="box_0"></div>
+		</div>
+	</div>
+	<div class='player player1'>
+		<div>
+			<img id="role_1">
+			<div id="name_1"></div>
+		</div>
+		<div class='tool-list'>
+			<div id="heart_1"></div>
+			<div id="skate_1"></div>
+			<div id="shell_1"></div>
+			<div id="shoe_1"></div>
+			<div id="ironman_1"></div>
+			<div id="box_1"></div>
+		</div>
+	</div>
+    <div class='message welcome-screen'>
+      <h1>Welcome to Footballbomb!</h1>
+      <form>
+        <label>Please input your name:</label>
+        <input id="uname" type='text' maxlength='50' required>
+          <br>
+		<label>Please choose your role:</label>
+	    <table border=1 id='role-table' style="margin:auto">
+			<tr>
+				<td><img src="image/type1.png" class='jump' title="boy"><input name="Role" type="radio" value="0" checked></td>
+				<td><img src="image/type2.png" title="monk"><input name="Role" type="radio" value="1"></td>
+				<td><img src="image/type3.png" title="beauty"><input name="Role" type="radio" value="2"></td>
+				<td><img src="image/type4.png" class='jump swing' title="cutie"><input name="Role" type="radio" value="3"></td>
+			</tr>
+		</table>
+        <button id="submit">Submit</button>
+	  	<table class="matching hide" style="margin:auto"><tr><td><img src="image/loading.gif"></td><td>Matching player...</td></tr></table>
+      </form>
+    </div>
+
+    <div class='message replay-screen hide'>
+      	<h1 class='result'></h1>
+		<div class='role'><img></div>
+      	<button class='replay-button'>Play Again</button>
+	  	<div class="matching hide">
+			<img src="image/loading.gif">
+			Matching player...
+		</div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="js/client.js"></script>
+
+	<!--audio id="audio_bang" src="audio/bang.wav" ></audio>
+	<audio id="audio_gettool" src="audio/gettool.wav" ></audio>
+	<audio id="audio_newtool" src="audio/newtool.wav" ></audio>
+	<audio id="audio_warn" src="audio/warn.wav" ></audio>
+	<audio id="audio_hurt" src="audio/hurt.wav" ></audio-->
+	<audio id="audio_lose" src="audio/lose.wav" ></audio>
+	<audio id="audio_win" src="audio/win.wav" ></audio>
+	<audio id="audio_background"  controls="controls" loop="true" >
+		<source src="audio/background.wav" type="audio/wav">
+	</audio>
+  </body>
+</html> 
