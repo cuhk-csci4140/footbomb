@@ -18,8 +18,8 @@ A real-time two-player web game. Built with Node.js, socket.io and HTML5 canvas.
 + ![alt text](https://raw.githubusercontent.com/Y--p--Y/footbomb/master/image/ironman.png): Protects you from being bombed for 1 minute
 
 ##### To run on localhost:
-Type within footbomb
+Type
 ```
 node server
 ```
-Then open [http://localhost:8080](http://localhost:8080) and enjoy the show!
+ within footbomb folder, then open [http://localhost:8080](http://localhost:8080) and enjoy the show!
