@@ -3,9 +3,9 @@
 A real-time two-player web game. Built with Node.js, socket.io and HTML5 canvas.
 
 ##### Movements: 
-+ Press space to kick, 
-+ Press enter to place bomb,
-+ Press up to move forward, 
++ Press space to kick
++ Press enter to place bomb
++ Press up to move forward
 + Press down to move backward
 + Press left, right to turn
 
@@ -22,4 +22,4 @@ Type
 ```
 node server
 ```
- within footbomb folder, then open [http://localhost:8080](http://localhost:8080) and enjoy the show!
+ within folder 'footbomb', then open [http://localhost:8080](http://localhost:8080) and enjoy the show!
