@@ -1,6 +1,6 @@
 # Footbomb
 
-A real-time two-player web game. Built with Node.js, socket.io and HTML5 canvas.
+A real-time two-player web game built with Node.js, socket.io and HTML5 canvas. It is hosted on aws:  [ec2-54-254-162-181.ap-southeast-1.compute.amazonaws.com](ec2-54-254-162-181.ap-southeast-1.compute.amazonaws.com)
 
 ##### Movements: 
 + Press space to kick
