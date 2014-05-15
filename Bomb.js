@@ -59,7 +59,7 @@ Bomb.prototype.setTarget = function (x, y) {
     this.step = 0.04;
 }
 
-Bomb.prototype.setToExplode = function () { //change bomb size, pos, state
+Bomb.prototype.setToExplode = function () {
     this.state = 1;
     this.age = this.lifeSpan + 60;
 };
